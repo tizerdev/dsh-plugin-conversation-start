@@ -26,32 +26,65 @@ DSH 客户端 UI 插件：在当前对话消息流的最底部、composer 卡的
 
 ## 安装
 
-### 方式 A：从本地路径 / git clone 后的目录安装
+### 方式 A：在 DSH Desktop 里直接粘贴 git 仓库地址（最简单）
+
+1. 打开 DSH Desktop（或 Web UI）的**设置 → 插件**
+3. 找到"从仓库安装" / "Install from Git" / "Add plugin" 类入口
+4. 粘贴下面的仓库地址：
+
+   ```
+   https://github.com/tizerdev/dsh-plugin-conversation-start
+   ```
+
+5. 确认安装
+6. 第一次安装需要重启 DSH 进程一次（Loader 要重新装载 patch layer）
+7. 浏览器硬刷新 Web UI（Cmd/Ctrl+Shift+R）
+
+> 这个插件是纯 JS，没有 `prepare` / 构建脚本，pnpm 10+ 默认安全策略不会拦截。
+
+### 方式 B：用 `dsh` CLI 安装
+
+如果你装了 `dsh` 命令行工具：
 
 ```bash
-# 1. 拿到插件目录（git clone 或直接拷贝）
+# 1. 克隆到本地
 git clone https://github.com/tizerdev/dsh-plugin-conversation-start.git
+cd dsh-plugin-conversation-start
 
-# 2. 用 plugin_manager 装到当前 profile
-plugin_manager install_bundle ./dsh-plugin-conversation-start
+# 2. 加进 web profile
+dsh plugin --profile web add .
+# 或者
+dsh plugin --profile web add ./dsh-plugin-conversation-start
 
-# 3. 重启 DSH 一次（首次安装时 Loader 必须重启才能装载新 patch layer）
-# 4. 浏览器硬刷新 Web UI（Cmd/Ctrl+Shift+R）
+# 3. 验证配置层
+dsh --profile web --dump-config | grep conversation-start
+
+# 4. 启动
+dsh --profile web
 ```
 
-### 方式 B：从 `.tgz` 安装
+### 方式 C：从 `.tgz` 安装
+
+适合离线 / 私有场景：
 
 ```bash
+# 1. 打包
 pnpm pack
-plugin_manager install_bundle ./dsh-plugin-conversation-start-1.0.0.tgz
+# 产出 dsh-plugin-conversation-start-1.0.0.tgz
+
+# 2. 在 DSH Desktop 里选"从本地文件安装" / "Install from .tgz" → 选这个文件
+# 或者用 CLI：
+dsh plugin --profile web add ./dsh-plugin-conversation-start-1.0.0.tgz
 ```
 
 ## 卸载
 
-DSH 设置 → 插件 → 找到 `conversation-start` → 停用 / 移除。或：
+**DSH Desktop**：设置 → 插件 → 找到 `conversation-start` → 停用 / 移除。
+
+**CLI**：
 
 ```bash
-plugin_manager remove_bundle dsh-plugin-conversation-start
+dsh plugin --profile web remove dsh-plugin-conversation-start
 ```
 
 卸载后也需要重启 DSH 一次让 patch 撤销生效。
@@ -88,11 +121,19 @@ dsh-plugin-conversation-start/
 
 ## 开发 / 调整
 
-修改 `client.js` 后，在当前 profile 下重装即可热刷新插件（client 资源由 HMR 推送，不需要重启 DSH）：
+修改 `client.js` 后重新装一次即可。client 资源由 HMR 推送，**不需要重启 DSH**，只要浏览器硬刷新一次。
+
+**DSH Desktop**：
+
+1. 设置 → 插件 → 找到 `conversation-start` → 移除
+3. 重新走一遍安装流程（从同一个 git 仓库地址或同一个本地目录）
+
+**CLI**：
 
 ```bash
-# 1. 修改 client.js 后，重新安装
-plugin_manager install_bundle ./dsh-plugin-conversation-start
+# 1. 修改 client.js 后，重新加一遍
+dsh plugin --profile web remove dsh-plugin-conversation-start
+dsh plugin --profile web add .
 
 # 2. 浏览器硬刷新 Web UI（Cmd/Ctrl+Shift+R）
 ```
