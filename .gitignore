@@ -1,0 +1,15 @@
+# Build artifacts
+node_modules/
+*.tgz
+.DS_Store
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Editor / OS
+.vscode/
+.idea/
+Thumbs.db
+
+# Local overrides (if you experiment with the patch)
+*.local.yml
