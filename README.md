@@ -30,7 +30,7 @@ DSH 客户端 UI 插件：在当前对话消息流的最底部、composer 卡的
 
 ```bash
 # 1. 拿到插件目录（git clone 或直接拷贝）
-git clone https://github.com/<your-username>/dsh-plugin-conversation-start
+git clone https://github.com/tizerdev/dsh-plugin-conversation-start.git
 
 # 2. 用 plugin_manager 装到当前 profile
 plugin_manager install_bundle ./dsh-plugin-conversation-start
